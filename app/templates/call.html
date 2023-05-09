@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VOIP Call</title>
+</head>
+<body>
+    <h1>VOIP Call</h1>
+    <h2>Username: {{ username }}</h2>
+    <button id="end-call">End Call</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port);
+        const username = '{{ username }}';
+
+        socket.on('connect', function() {
+            socket.emit('join', {username: username});
+        });
+
+        socket.on('message', function(data) {
+            console.log('Received message:', data);
+        });
+
+        document.getElementById('end-call').addEventListener('click', function() {
+            socket.emit('end_call', {username: username});
+            window.close();
+        });
+    </script>
+</body>
+</html>
